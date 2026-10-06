@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PathPilot – AI Career Guidance for Diploma Students</title>
+<style>
+:root{--d:#0f1b4d;--r:#2f4bd8;--p:#7c3aed;--l:#f4f6ff}
+*{box-sizing:border-box;margin:0;font-family:system-ui,Segoe UI,sans-serif}
+body{background:var(--l);color:#1e2447;line-height:1.55}
+nav{background:var(--d);display:flex;flex-wrap:wrap;gap:6px 16px;padding:12px 20px;align-items:center;position:sticky;top:0;z-index:5}
+nav a{color:#dfe5ff;text-decoration:none;font-size:14px;cursor:pointer}nav b{color:#fff;font-size:20px;margin-right:auto}
+main{max-width:1100px;margin:auto;padding:20px;min-height:70vh}
+h1,h2,h3{margin:12px 0 8px}p,li{margin:6px 0}ul{padding-left:20px}
+.hero{background:linear-gradient(135deg,var(--d),var(--r),var(--p));color:#fff;border-radius:20px;padding:40px 26px;display:grid;gap:20px;grid-template-columns:1.2fr 1fr;align-items:center}
+.art{font-size:80px;text-align:center;animation:fl 3s ease-in-out infinite}@keyframes fl{50%{transform:translateY(-12px)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:12px 0}
+.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 16px #2f4bd822;transition:.2s}
+.card:hover{transform:translateY(-3px)}
+.btn{display:inline-block;background:linear-gradient(90deg,var(--r),var(--p));color:#fff;border:0;border-radius:10px;padding:10px 18px;cursor:pointer;text-decoration:none;font-size:15px;margin:4px 4px 4px 0}
+.btn.w{background:#fff;color:var(--d)}.btn:disabled{opacity:.4;cursor:not-allowed}
+input,select,textarea{width:100%;padding:10px;margin:5px 0 10px;border:1px solid #c5ccf0;border-radius:10px;font-size:15px}
+.form{max-width:440px;margin:30px auto}.err{color:#c0262d;font-size:14px}
+.bar{background:#dde2fb;border-radius:20px;height:12px;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--r),var(--p));transition:width .5s}
+.opt{display:block;border:2px solid #dde2fb;border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}.opt.on{border-color:var(--p);background:#f2ecff}.opt input{width:auto;margin-right:8px}
+.chip{display:inline-block;background:#e6eaff;border-radius:20px;padding:5px 12px;margin:4px;font-size:14px}
+.tag{font-size:12px;background:#e6eaff;border-radius:6px;padding:2px 8px}.tag.o{background:#d9f7e4}
+.node{display:inline-block;background:#fff;border:2px solid var(--r);border-radius:12px;padding:8px 12px;margin:6px;cursor:pointer}.node.on{background:var(--r);color:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px;background:#fff}td,th{border:1px solid #dde2fb;padding:6px;text-align:left}
+.warn{background:#fff3cd;border-left:5px solid #f0ad00;padding:10px;border-radius:8px;margin:10px 0}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:14px}#cv{background:#fff;padding:20px;border-radius:12px;white-space:pre-wrap}
+footer{background:var(--d);color:#cfd6ff;padding:24px 20px;text-align:center;font-size:14px}footer a{color:#cfd6ff;margin:0 8px}
+@media(max-width:700px){.hero,.res{grid-template-columns:1fr}.art{font-size:56px}}
+@media print{body *{visibility:hidden}#cv,#cv *{visibility:visible}#cv{position:absolute;left:0;top:0}}
+</style></head><body>
+<nav id="nav"></nav><main id="app"></main>
+<footer><b>PathPilot – AI Career Guidance for Diploma &amp; Polytechnic Students</b><br>A B.Tech CSP Project<p>
+<a href="#/home">About</a><a href="#/assess">Career Assessment</a><a href="#/careers">Career Paths</a><a href="#/learn">Learning Resources</a><a href="#/govt">Government Jobs</a><a href="#/btech">B.Tech Guidance</a><a href="#/home">Contact</a><a href="#/home">Privacy Policy</a><a href="#/home">Terms &amp; Conditions</a></p></footer>
+<script>
+const $=id=>document.getElementById(id),V={},A={};let U=null;
+const e=s=>String(s??'').replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const api=(u,b)=>fetch('/api/'+u,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
+const L=(t,u)=>`<a href="${e(u)}" target="_blank" rel="noopener noreferrer">${e(t)} ↗</a>`;
+const WARN='<div class="warn">⚠ Never depend on unofficial websites for final eligibility or application information. Always verify the latest notification on the official website.</div>';
+
+async function go(){
+  U=(await api('me')).user;
+  const r=location.hash.slice(2)||'home';
+  if(['dashboard','assess','result','guidance','resume','admin'].includes(r)&&!U){location.hash='#/login';return}
+  $('nav').innerHTML='<b>🧭 PathPilot</b><a href="#/home">Home</a><a href="#/careers">Careers</a><a href="#/btech">B.Tech</a><a href="#/govt">Govt Jobs</a><a href="#/private">Private Jobs</a><a href="#/learn">Learning</a><a href="#/links">Resources</a><a href="#/official">Official Sites</a><a href="#/roadmap">Roadmap</a>'+
+    (U?'<a href="#/dashboard">Dashboard</a><a href="#/resume">Resume</a>'+(U.admin?'<a href="#/admin">Admin</a>':'')+'<a onclick="out()">Logout</a>':'<a href="#/login">Login</a><a href="#/register">Register</a>');
+  $('app').innerHTML=await (V[r]||V.home)();scrollTo(0,0);A[r]&&A[r]();
+}
+async function out(){await api('logout',{});location.hash='#/home';go()}
+addEventListener('hashchange',go);go();
+
+/* ---------- HOME ---------- */
+V.home=()=>`<div class="hero"><div><h1>AI-Powered Career Guidance for Diploma Students</h1><p>Discover the right career path based on your skills, interests, education and goals.</p>
+<a class="btn w" href="#/register">Register Here</a><a class="btn w" href="#/careers">Explore Careers</a></div><div class="art">🎓💻🚀</div></div>
+<h2>About the Platform</h2><div class="grid">
+<div class="card"><h3>What is career guidance?</h3><p>It helps you understand your strengths and interests and match them with suitable careers.</p></div>
+<div class="card"><h3>Why it matters after Diploma</h3><p>After diploma you can study B.Tech, take government exams or join private jobs. Choosing wrongly wastes time and money.</p></div>
+<div class="card"><h3>How PathPilot helps</h3><p>You answer a short questionnaire, we give a personal roadmap, learning links and official websites.</p></div>
+<div class="card"><h3>How the AI assessment works</h3><p>Each answer adds points to career paths. Paths are ranked by match percentage using a transparent scoring algorithm.</p></div></div>
+<h2>What Can You Do After Diploma?</h2><div class="grid">
+<div class="card"><h3>🎓 Higher Studies (B.Tech)</h3><p>Join B.Tech 2nd year via lateral entry entrance exams (ECET / JELET / LEET).</p><a href="#/btech">Explore Entrance Exams →</a></div>
+<div class="card"><h3>🏛 Government Jobs</h3><p>Junior Engineer and technical roles in Railways, SSC, PSUs and state boards.</p><a href="#/govt">View Govt Opportunities →</a></div>
+<div class="card"><h3>💻 Tech & Software Jobs</h3><p>Upskill in Full-Stack, Data Analytics, Cloud or Mobile Apps.</p><a href="#/roadmap">View Tech Roadmaps →</a></div>
+<div class="card"><h3>🏭 Private Jobs</h3><p>Trainee and technician roles in core and IT companies.</p><a href="#/private">View Private Jobs →</a></div></div>
+<h2>Who Can Use This Website?</h2>${['Diploma students','Polytechnic students','Final-year students','Students planning B.Tech','Government job aspirants','Private job aspirants','IT/software aspirants','Confused students'].map(x=>`<span class=chip>${x}</span>`).join('')}
+<h2>What This Website Provides</h2><div class="grid">${['AI Career Assessment','Personalized Recommendations','B.Tech Lateral Entry Guidance','Government Job Guidance','Private Job Guidance','IT & Software Guidance','Skill Roadmaps','Learning Materials (govt, private, ECET)','Official Website Links','YouTube Resources','Career Preparation Steps','Resume Builder'].map(x=>`<div class=card>✅ ${x}</div>`).join('')}</div>
+<p style="text-align:center"><a class="btn" href="#/assess">Start Your Career Assessment</a></p>`;
+
+/* ---------- AUTH ---------- */
+const BR=['CSE / IT','ECE','EEE','Mechanical','Civil'];
+V.register=()=>`<div class="card form"><h2>Create Account</h2><input id=n placeholder="Full Name"><input id=em type=email placeholder="Email"><input id=pw type=password placeholder="Password (min 6)"><input id=cf type=password placeholder="Confirm Password">
+<select id=br><option value="">Diploma Branch</option>${BR.map(b=>`<option>${b}</option>`).join('')}</select><div class=err id=er></div><button class=btn onclick=reg()>Register</button><p>Already registered? <a href="#/login">Login here</a></p></div>`;
+async function reg(){const r=await api('register',{name:n.value,email:em.value,password:pw.value,confirm:cf.value,branch:br.value});
+  if(r.error)er.textContent=r.error;else{alert('Registered! Please login.');location.hash='#/login'}}
+V.login=()=>`<div class="card form"><h2>Login</h2><input id=em type=email placeholder="Email"><input id=pw type=password placeholder="Password"><div class=err id=er></div>
+<button class=btn onclick=log()>Login</button><button class=btn onclick="alert('Password reset: please contact your admin.')">Forgot Password</button><a class=btn href="#/register">Create New Account</a></div>`;
+async function log(){const r=await api('login',{email:em.value,password:pw.value});if(r.error)er.textContent=r.error;else location.hash='#/dashboard'}
+
+/* ---------- DASHBOARD ---------- */
+V.dashboard=()=>`<h1>Welcome, ${e(U.name)}</h1><p>${e(U.branch)} • ${e(U.email)}</p><b>Assessment progress: ${U.done?'Completed ✅':'Not started'}</b><div class=bar><i style="width:${U.done?100:0}%"></i></div>
+<div class="grid">${[['assess','📝 Start Career Assessment'],['result','🎯 My Career Recommendation'],['guidance','🪜 Guidance Steps'],['learn','📚 Learning Materials'],['links','🌐 Recommended Websites'],['links','▶ YouTube Resources'],['resume','📄 Resume Builder'],['dashboard','👤 My Profile']].map(x=>`<a class=card href="#/${x[0]}" style="text-decoration:none;color:inherit"><h3>${x[1]}</h3></a>`).join('')}</div>`;
+
+/* ---------- ASSESSMENT ---------- */
+let Q=[],ans=[],qi=0;
+V.assess=async()=>{Q=await api('questions');ans=[];qi=0;return '<div id=qa></div>'};A.assess=()=>showQ();
+function showQ(){const q=Q[qi],last=qi==Q.length-1;
+ qa.innerHTML=`<div class=card><h2>Discover Your Best Career Path</h2><p>Answer the following questions honestly. Your answers will be analyzed to identify career paths that best match your interests, skills and goals.</p>
+ <div class=bar><i style="width:${(qi+1)/Q.length*100}%"></i></div><h3>Q${qi+1}/${Q.length}. ${e(q.q)}</h3>`+
+ q.o.map((o,i)=>`<label class="opt ${ans[qi]===i?'on':''}"><input type=radio name=o ${ans[qi]===i?'checked':''} onchange="ans[qi]=${i};showQ()">${e(o)}</label>`).join('')+
+ `<button class=btn ${qi?'':'disabled'} onclick="qi--;showQ()">Previous</button>`+
+ (last?`<button class=btn ${ans[qi]==null?'disabled':''} onclick=sub()>Submit</button>`:`<button class=btn ${ans[qi]==null?'disabled':''} onclick="qi++;showQ()">Next</button>`)+'<div class=err id=er></div></div>'}
+async function sub(){const r=await api('submit',{answers:ans});if(r.error)er.textContent=r.error;else location.hash='#/result'}
+
+/* ---------- RESULT & GUIDANCE ---------- */
+V.result=async()=>{const r=await api('result');if(r.error)return `<div class=card>No assessment yet. <a href="#/assess">Start the assessment</a></div>`;const c=r.top;
+ return `<div class=card><h2>Your Recommended Career Path</h2><h1>🎯 ${e(c.name)}</h1><b>Career Match: ${c.pct}%</b><div class=bar><i style="width:${c.pct}%"></i></div>
+ <h3>Why This Career Matches You</h3><p>${e(r.why)}</p><p>${e(c.description)}</p>
+ <div class=grid><div><b>Required Skills</b><p>${e(c.skills)}</p></div><div><b>Required Education</b><p>${e(c.education)}</p></div>
+ <div><b>Beginner Salary (approximate, varies by location/company)</b><p>${e(c.salary)}</p></div><div><b>Growth Opportunities</b><p>${e(c.growth)}</p></div></div>
+ <a class=btn href="#/guidance">View Guidance Steps</a><a class=btn href="#/roadmap">Career Roadmap</a></div>
+ <h3>Other Suitable Careers</h3><div class=grid>${r.others.map(o=>`<div class=card><b>${e(o[0])}</b> – ${o[1]}%<div class=bar><i style="width:${o[1]}%"></i></div></div>`).join('')}</div>`};
+V.guidance=async()=>{const r=await api('result');if(r.error)return `<div class=card>Take the <a href="#/assess">assessment</a> first.</div>`;
+ return `<h1>Guidance Steps: ${e(r.top.name)}</h1>`+r.top.steps.map((s,i)=>`<div class=card style="margin:10px 0"><h3>Step ${i+1}</h3><p>${e(s)}</p></div>`).join('')+'<p>Next: <a href="#/learn">Learning Materials</a> • <a href="#/official">Official Websites</a></p>'};
+
+/* ---------- CAREERS ---------- */
+V.careers=async()=>`<h1>Explore Career Paths</h1><div class=grid>${(await api('careers')).map(c=>`<div class=card><h3>${e(c.name)}</h3><p>${e(c.description)}</p><p><b>Skills:</b> ${e(c.skills)}</p><p><b>Education:</b> ${e(c.education)}</p><p><b>Salary (approx.):</b> ${e(c.salary)}</p></div>`).join('')}</div><a class=btn href="#/assess">Find My Best Match</a>`;
+
+/* ---------- B.TECH ---------- */
+V.btech=()=>`<h1>B.Tech Lateral Entry Guidance</h1><p><b>Path:</b> Diploma → B.Tech Lateral Entry → Engineering Degree → Higher Studies / Jobs</p>${WARN}
+<div class=grid>${[['What is lateral entry?','Diploma holders can join B.Tech directly in the 2nd year, skipping the first year.'],
+['Eligibility','Depends on state, board and branch. Check the latest official notification for marks, domicile and branch rules.'],
+['Admission process','Apply online → entrance exam → rank card → counselling → web options → seat allotment → reporting to college.'],
+['Entrance routes','State exams such as AP ECET / TS ECET (JELET, LEET in other states), and some university-level routes.'],
+['State-wise differences','Every state has its own exam, syllabus, fee, seat matrix and counselling. AP and TS students: use the official portals below.'],
+['Important documents','Diploma marks memos, rank card, hall ticket, study/transfer certificates, caste/income/local status certificates, photo ID.'],
+['Counselling process','Register → pay fee → verify documents → enter college/branch options by priority → download allotment → self-report.'],
+['Selecting a college','Compare accreditation (NBA/NAAC), placements, faculty, location, fees and previous cut-off ranks.'],
+['Selecting a branch','Prefer your diploma-related branch for easier admission; choose by interest, future scope and your expected rank.'],
+['Duration','Usually 3 years after diploma (verify with your university).'],
+['Careers after B.Tech','Software/IT, core engineering, PSU/government exams, M.Tech/MBA, GATE, entrepreneurship.']].map(x=>`<div class=card><h3>${x[0]}</h3><p>${x[1]}</p></div>`).join('')}</div>
+<h3>Official Portals</h3><p>${L('AP ECET (APSCHE)','https://cets.apsche.ap.gov.in/ECET')} • ${L('TS ECET','https://ecet.tsche.ac.in')} • ${L('AICTE','https://www.aicte-india.org')}</p>`;
+
+/* ---------- GOVT ---------- */
+const G=[['SSC (Junior Engineer & others)','Diploma/degree in the required branch','CBT written exams, then document verification','Reasoning, general awareness and technical papers','Core diploma subjects first, then reasoning; solve previous papers','Core technical, reasoning, speed','https://ssc.gov.in'],
+['RRB (Railways)','Diploma in relevant trade/branch','CBT stages, then verification/medical','Non-technical + technical CBT','Mock tests, previous papers, branch fundamentals','Technical basics, maths, awareness','https://indianrailways.gov.in'],
+['State Government / APPSC','Branch-specific diploma, domicile rules apply','Written exam/interview as notified','Per state notification','State syllabus, state GK, previous papers','Core subjects, state awareness','https://psc.ap.gov.in'],
+['Police / Defence','Age, physical and education rules per recruitment','Written + physical + medical tests','As per the recruiting body','Fitness training + written practice','Fitness, discipline, reasoning','https://joinindianarmy.nic.in'],
+['PSU & Research (ISRO etc.)','Diploma with required percentage per notice','Written test and/or skill test','Technical + aptitude','Strong core subjects, previous papers','Core technical, aptitude','https://www.isro.gov.in'],
+['Other technical govt jobs','Branch-specific','As notified','As notified','Track notifications regularly','Core + general skills','https://www.ncs.gov.in']];
+V.govt=()=>`<h1>Government Job Guidance</h1>${WARN}<p>Details below are general. Eligibility, age limits, pattern and dates change – always read the latest official notification.</p><div class=grid>`+
+ G.map(g=>`<div class=card><h3>${g[0]}</h3><p><b>Eligibility/Qualification:</b> ${g[1]}</p><p><b>Selection:</b> ${g[2]}</p><p><b>Exam pattern:</b> ${g[3]}</p><p><b>Preparation:</b> ${g[4]}</p><p><b>Skills:</b> ${g[5]}</p><p><b>Official notifications:</b> ${L(g[6].replace('https://',''),g[6])}</p></div>`).join('')+'</div>';
+
+/* ---------- PRIVATE ---------- */
+const P={'Software Developer':['Programming, DSA, SQL, Git','Python/Java → DSA → projects → internship','Inventory app, quiz app'],'Web Developer':['HTML, CSS, JavaScript, responsive design','Frontend → backend basics → deploy','Portfolio, blog, job portal'],
+'Python Developer':['Python, OOP, Flask/Django, SQL','Python basics → Flask → APIs → database','Expense tracker, REST API'],'Frontend Developer':['HTML, CSS, JS, React, Git','JS → React → UI projects','Landing pages, weather app'],
+'Backend Developer':['Python/Node, APIs, SQL, auth','Language → framework → database → deployment','Auth system, e-commerce API'],'Full Stack Developer':['Frontend + backend + database','HTML/CSS/JS → Flask/Node → SQL → full project','Student portal, career guidance system'],
+'QA / Testing':['Test cases, manual testing, Selenium basics','Testing basics → bug reporting → automation','Test plan for a website'],'Technical Support':['Troubleshooting, OS, networking basics, communication','IT basics → OS/network → tickets practice','Home-lab setup docs'],
+'Networking':['TCP/IP, routing, switching, Linux','CCNA basics → labs → certificate','Packet Tracer lab designs'],'Cloud Support':['Linux, cloud fundamentals, networking','Linux → cloud basics → certificate','Host a website on cloud free tier'],
+'Core Engineering Jobs':['AutoCAD, PLC, maintenance, safety, core subjects','Core subjects → CAD/PLC → industrial training','Final-year project, CAD drawings']};
+V.private=()=>`<h1>Private Job Guidance</h1><div class=grid>`+Object.entries(P).map(([k,v])=>`<div class=card><h3>${k}</h3><p><b>Skills:</b> ${v[0]}</p><p><b>Beginner roadmap:</b> ${v[1]}</p><p><b>Projects:</b> ${v[2]}</p></div>`).join('')+`</div>
+<div class=grid><div class=card><h3>Resume requirements</h3><p>One page, clear skills, projects, education, certificates, links to GitHub/LinkedIn. <a href="#/resume">Build resume</a></p></div>
+<div class=card><h3>Interview preparation</h3><p>Aptitude, core technical questions, coding basics, HR questions, communication practice.</p></div>
+<div class=card><h3>Internship strategy</h3><p>Apply early on Internshala/LinkedIn, show projects, accept small paid/unpaid internships to gain experience.</p></div>
+<div class=card><h3>Job search strategy</h3><p>Apply daily on job portals and company career pages, network on LinkedIn, ask seniors for referrals.</p></div></div>`;
+
+/* ---------- RESOURCES ---------- */
+const KN={official:'✅ Official Sources',learning:'📚 Learning Resources',job:'💼 Job Portals',youtube:'▶ YouTube'};
+async function res(kinds,title,search){const all=(await api('resources')).filter(r=>kinds.includes(r.kind));
+ let h=`<h1>${title}</h1>${search?'<input id=sr placeholder="Search material..." oninput="filt()">':''}<div id=rl>`;
+ kinds.forEach(k=>{h+=`<h2>${KN[k]}</h2><div class=grid>`+all.filter(r=>r.kind==k).map(r=>`<div class="card it"><span class="tag ${k=='official'?'o':''}">${e(r.category)}</span><h3>${e(r.title)}</h3>${L('Open',r.url)}</div>`).join('')+'</div>'});
+ return h+'</div>'+(kinds.includes('official')?WARN:'<p>Third-party websites are not official government sites.</p>')}
+function filt(){const s=sr.value.toLowerCase();document.querySelectorAll('.it').forEach(c=>c.style.display=c.textContent.toLowerCase().includes(s)?'':'none')}
+V.learn=()=>res(['learning'],'Learning Materials',1);
+V.links=()=>res(['youtube','job','learning'],'Recommended Learning Resources',1);
+V.official=()=>res(['official'],'Official Websites');
+
+/* ---------- ROADMAP ---------- */
+const RM={'Private / IT Job':[['Diploma','Complete diploma with good marks'],['Skill Development','Learn programming or core tools'],['Projects','Build 3 practical projects'],['Internship','Apply on Internshala/LinkedIn'],['Resume','Prepare one-page resume'],['Interview Preparation','Aptitude, technical, HR'],['Job','Apply and join']],
+'B.Tech Lateral Entry':[['Diploma','Finish diploma'],['Lateral Entry Exam','Check official notification, prepare, apply'],['Counselling','Choose college & branch'],['Engineering Degree','Complete B.Tech'],['Internship','Do internships'],['Placement / Higher Studies','Campus jobs, GATE, M.Tech']],
+'Government Job':[['Diploma','Finish diploma'],['Identify Eligible Exams','Match branch with notifications'],['Preparation','Syllabus + previous papers'],['Apply','Only on official portal'],['Exam','CBT/written exam'],['Skill / Physical Test','If applicable'],['Interview / Final Selection','Documents & joining']]};
+let rk='Private / IT Job';
+V.roadmap=()=>`<h1>Career Roadmap</h1><p>Click a roadmap, then click each step.</p>${Object.keys(RM).map(k=>`<button class=btn onclick="rk='${k}';rr()">${k}</button>`).join('')}<div id=rm></div>`;
+A.roadmap=()=>rr();
+function rr(i=0){rm.innerHTML=RM[rk].map((n,j)=>`<span class="node ${j==i?'on':''}" onclick="rr(${j})">${j+1}. ${n[0]}</span>`).join(' →')+`<div class=card><h3>${RM[rk][i][0]}</h3><p>${RM[rk][i][1]}</p></div>`}
+
+/* ---------- RESUME BUILDER ---------- */
+const RF=[['rn','Full Name'],['re','Email'],['rp','Phone'],['ro','Career Objective'],['red','Education'],['rs','Skills'],['rpr','Projects'],['rc','Certifications'],['ra','Achievements']];
+V.resume=()=>`<h1>Resume Builder</h1><div class=res><div>${RF.map(f=>`<label>${f[1]}</label><textarea id=${f[0]} rows=${f[0]=='rn'||f[0]=='re'||f[0]=='rp'?1:3} oninput=cv()></textarea>`).join('')}<button class=btn onclick=print()>Print / Save as PDF</button></div><div id=cv></div></div>`;
+A.resume=()=>{rn.value=U.name;re.value=U.email;red.value='Diploma in '+U.branch;cv()};
+function cv(){window.cv_=0;$('cv').innerHTML=`<h2>${e(rn.value)}</h2><p>${e(re.value)} | ${e(rp.value)}</p>`+[['Objective','ro'],['Education','red'],['Skills','rs'],['Projects','rpr'],['Certifications','rc'],['Achievements','ra']].map(s=>$(s[1]).value?`<h3>${s[0]}</h3><p>${e($(s[1]).value)}</p>`:'').join('')}
+
+/* ---------- ADMIN ---------- */
+V.admin=async()=>{const d=await api('data'.replace('data','admin/data'));if(d.error)return d.error;
+ return `<h1>Admin Dashboard</h1><div class=grid><div class=card><h3>${d.users.length}</h3>Students</div><div class=card><h3>${d.results.length}</h3>Assessments</div></div>
+ <h3>Analytics – Top career recommended</h3>${Object.entries(d.dist).map(([k,v])=>`<p>${e(k)}: ${v}</p>`).join('')||'<p>No data yet</p>'}
+ <h3>Registered Students</h3><table><tr><th>Name</th><th>Email</th><th>Branch</th></tr>${d.users.map(u=>`<tr><td>${e(u.name)}</td><td>${e(u.email)}</td><td>${e(u.branch)}</td></tr>`).join('')}</table>
+ <h3>Assessment Results</h3><table><tr><th>Student</th><th>Top Career</th><th>Match</th><th>Date</th></tr>${d.results.map(r=>`<tr><td>${e(r.name)}</td><td>${e(r.top[0])}</td><td>${r.top[1]}%</td><td>${e(r.created)}</td></tr>`).join('')}</table>
+ <div class=grid><div class=card><h3>Add / Edit Career (same name = update)</h3>${['cn:Name','cd:Description','cs:Skills','ce:Education','cl:Salary (approx)','cg:Growth','cp:Steps separated by |','ct:Tags JSON e.g. {"prog":3,"logic":2}'].map(x=>`<input id=${x.split(':')[0]} placeholder='${x.split(':')[1]}'>`).join('')}<button class=btn onclick=addC()>Save Career</button><div class=err id=e1></div></div>
+ <div class=card><h3>Add Resource / Official Website</h3><select id=rkind><option>official</option><option>learning</option><option>job</option><option>youtube</option></select><input id=rcat placeholder=Category><input id=rti placeholder=Title><input id=rur placeholder="https://..."><button class=btn onclick=addR()>Add Resource</button><div class=err id=e2></div></div></div>`};
+async function addC(){const r=await api('admin/career',{name:cn.value,description:cd.value,skills:cs.value,education:ce.value,salary:cl.value,growth:cg.value,steps:cp.value,tags:ct.value});e1.textContent=r.error||'Saved ✅'}
+async function addR(){const r=await api('admin/resource',{kind:rkind.value,category:rcat.value,title:rti.value,url:rur.value});e2.textContent=r.error||'Added ✅'}
+</script></body></html>
